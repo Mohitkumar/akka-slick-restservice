@@ -20,10 +20,11 @@ trait MigrationConfig extends Config{
   val users: TableQuery[UserTable] = TableQuery[UserTable]
   val database = Database.forConfig("mysql")
   def migrate(){
+      print( "&&&&" +users.baseTableRow.tableName)
     try {
       Await.result(database.run(DBIO.seq(
         MTable.getTables map (tables => {
-          if (!tables.exists(_.name.name == users.baseTableRow.toString)){
+          if (!tables.exists(_.name.name.equalsIgnoreCase(users.baseTableRow.tableName))){
             logger.info("creating user table")
             Await.result(database.run(users.schema.create), Duration.Inf)
           }
