@@ -24,17 +24,17 @@ object UserDao extends BaseDao{
     userTable.result
   }
 
-  def findByEmail(email: String) = {
-    userTable.filter(_.email === email).result.headOption
+  def findByEmail(email: String):Future[User] = {
+    userTable.filter(_.email === email).result.head
   }
-  def findByUserNamePassword(userName: String, password:String) = {
-    userTable.filter(_.userName === userName).filter(_.password === password).result.headOption
+  def findByUserNamePassword(userName: String, password:String):Future[User]  = {
+    userTable.filter(_.userName === userName).filter(_.password === password).result.head
   }
-  def findByUserIdPassword(userId: Long, password:String) = {
-    userTable.filter(_.id === userId).filter(_.password === password).result.headOption
+  def findByUserIdPassword(userId: Long, password:String):Future[User]  = {
+    userTable.filter(_.id === userId).filter(_.password === password).result.head
   }
-  def findByUserName(userName: String) = {
-    userTable.filter(_.userName === userName).result.headOption
+  def findByUserName(userName: String):Future[User]  = {
+    userTable.filter(_.userName === userName).result.head
   }
 
   def insertReturning(user: User):Future[User] = {
@@ -48,7 +48,7 @@ object UserDao extends BaseDao{
     } yield s).transactionally
     tr;
   }
-  def updateOrInsert(user:User) = {
+  def updateOrInsert(user:User):Future[Option[User]] = {
     val tr = (for {
       existing <- userTable.filter(_.userName === user.userName).result.headOption
       row       = existing.map(_.copy(id=user.id)) getOrElse user
@@ -58,7 +58,7 @@ object UserDao extends BaseDao{
     tr;
   }
 
-  def updateUserPassword(id:Long, password:Option[String]) = {
+  def updateUserPassword(id:Long, password:Option[String]):Future[Option[User]] = {
     val tr = (for {
       ex <- filterQuery(id).map(f => f.password).
         update(password)

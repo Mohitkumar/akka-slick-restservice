@@ -20,7 +20,7 @@ trait BaseDao extends DbConnection{
     db.run(action)
   }
 
-  protected implicit def executeFromDbOption[A](action: SqlAction[Option[A], NoStream, _ <: slick.dbio.Effect]): Future[Option[A]] = {
+  protected implicit def executeFromDbOption[A](action: SqlAction[Option[A], NoStream, _ <: slick.dbio.Effect.Read]): Future[Option[A]] = {
     db.run(action)
   }
 
