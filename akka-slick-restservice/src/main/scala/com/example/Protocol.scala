@@ -5,11 +5,12 @@ import java.sql.Timestamp
 import com.example.entity.EntityObjects.UserSourceEnum._
 import com.example.entity.EntityObjects.{UserSourceEnum, User}
 import spray.json._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 
 /**
   * Created by user on 1/28/2017.
   */
-trait Protocol extends DefaultJsonProtocol{
+trait Protocol extends SprayJsonSupport with DefaultJsonProtocol{
   implicit object UserSourceEnumFormat extends RootJsonFormat[UserSourceEnum]{
     override def read(json: JsValue): UserSourceEnum = {
       json match {
