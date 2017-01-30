@@ -3,6 +3,7 @@ package com.example.dao
 import com.example.DbConnection
 import com.example.entity.EntityDefinition.UserTable
 import com.example.entity.EntityObjects.User
+import slick.basic.BasicAction
 import slick.dbio
 import slick.dbio.Effect.{Transactional, Read, Write}
 import slick.dbio.{DBIOAction, NoStream}
@@ -16,11 +17,11 @@ import scala.concurrent.Future
   */
 trait BaseDao extends DbConnection{
   val userTable = TableQuery[UserTable]
-  protected implicit def executeFromDb[A](action: SqlAction[A, NoStream, _ <: slick.dbio.Effect]): Future[A] = {
+  protected implicit def executeFromDb[A](action: BasicAction[A, NoStream, _ <: slick.dbio.Effect]): Future[A] = {
     db.run(action)
   }
 
-  protected implicit def executeFromDbOption[A](action: SqlAction[Option[A], NoStream, _ <: slick.dbio.Effect.Read]): Future[Option[A]] = {
+  protected implicit def executeFromDbOption[A](action: BasicAction[Option[A], NoStream, _ <: slick.dbio.Effect]): Future[Option[A]] = {
     db.run(action)
   }
 
@@ -28,11 +29,11 @@ trait BaseDao extends DbConnection{
     db.run(action)
   }
 
-  protected implicit def executeWriteStreamFromDb[A](action: FixedSqlAction[A, NoStream, Write]): Future[A] = {
+  protected implicit def executeWriteStreamFromDb[A](action: FixedSqlAction[A, NoStream, _ <: slick.dbio.Effect]): Future[A] = {
     db.run(action)
   }
 
-  protected implicit def executeWriteStreamFromDbOption[A](action: DBIOAction[Option[A], NoStream, Write with Read with Transactional]): Future[Option[A]] = {
+  protected implicit def executeWriteStreamFromDbOption[A](action: DBIOAction[Option[A], NoStream, _ <: slick.dbio.Effect]): Future[Option[A]] = {
     db.run(action)
   }
 }

@@ -18,14 +18,14 @@ object UserDao extends BaseDao{
     userTable.filter(_.id === id)
   }
   def findById(id: Long):Future[Option[User]] = {
-    executeFromDbOption(filterQuery(id).result.headOption)
+    filterQuery(id).result.headOption
   }
   def findAll():Future[Seq[User]] = {
     userTable.result
   }
 
-  def findByEmail(email: String):Future[User] = {
-    userTable.filter(_.email === email).result.head
+  def findByEmail(email: String):Future[Option[User]] = {
+    userTable.filter(_.email === email).result.headOption
   }
   def findByUserNamePassword(userName: String, password:String):Future[User]  = {
     userTable.filter(_.userName === userName).filter(_.password === password).result.head
